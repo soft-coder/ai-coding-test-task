@@ -5,6 +5,10 @@ const angular = require('angular-eslint');
 
 module.exports = tseslint.config(
   {
+    // Generated API client — not hand-maintained, don't lint it.
+    ignores: ['src/app/core/api/**'],
+  },
+  {
     files: ['**/*.ts'],
     extends: [
       eslint.configs.recommended,
