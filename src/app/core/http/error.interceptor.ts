@@ -4,6 +4,7 @@ import { catchError, throwError } from 'rxjs';
 
 import { NotificationService } from '../notifications/notification.service';
 import { isAuthFree } from './api-endpoints';
+import { httpErrorMessage } from './http-error-message';
 
 /**
  * Central surface for HTTP failures: turns an error into a readable message and
@@ -16,16 +17,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((err: HttpErrorResponse) => {
       if (err.status !== 401 && !isAuthFree(req.url)) {
-        notifications.error(messageFrom(err));
+        notifications.error(httpErrorMessage(err));
       }
       return throwError(() => err);
     }),
   );
 };
-
-function messageFrom(err: HttpErrorResponse): string {
-  if (typeof err.error === 'string' && err.error) return err.error;
-  if (err.error?.message) return err.error.message;
-  if (err.status === 0) return 'Network error. Please check your connection and try again.';
-  return err.message || 'Unexpected error.';
-}
