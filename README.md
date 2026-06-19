@@ -1,59 +1,52 @@
-# CategoriesReference
+# Categories reference
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.27.
+Angular 19 take-home: a categories reference (login → virtual-scroll table → full
+CRUD) wired to the `front` backend API. The real deliverable is a clean,
+reviewable workflow demonstrated through git history (issues → branches → PRs →
+review → merge), not just the running app.
 
-## Development server
+## Docs
 
-To start a local development server, run:
+- [docs/requirements.md](docs/requirements.md) — screens, API contract, behaviors.
+- [docs/decisions.md](docs/decisions.md) — why the key choices were made (ADR-lite).
+- [CLAUDE.md](CLAUDE.md) — working agreement and decisions log.
 
-```bash
-ng serve
-```
+## Stack
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Angular 19 (standalone, signals, new control flow, functional guards/interceptors),
+PrimeNG 19 + runtime theme preset, Angular CDK virtual scroll, RxJS for HTTP.
+API client generated from the `front` OpenAPI spec. Playwright for e2e + visual
+regression.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Getting started
 
 ```bash
-ng generate --help
+npm install                 # install dependencies
+npx playwright install chromium   # one-time, for e2e
+npm start                   # dev server at http://localhost:4200
 ```
 
-## Building
+The API base URL and credentials are not committed. Copy `.env.example` to `.env`
+and fill in the local values (added with the API layer).
 
-To build the project run:
+## Commands
 
-```bash
-ng build
-```
+| Command | What it does |
+|---|---|
+| `npm start` | Dev server (`ng serve`) |
+| `npm run build` | Production build to `dist/` |
+| `npm test` | Unit tests (Karma/Jasmine) |
+| `npm run lint` | ESLint (`angular-eslint` + `typescript-eslint`) |
+| `npm run e2e` | Playwright e2e + visual regression |
+| `npm run e2e -- --update-snapshots` | Refresh visual baselines (deliberate UI changes only) |
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Testing
 
-## Running unit tests
+Two layers: an automated Playwright **visual-regression** gate (committed baselines
+at a fixed 1920×1080 viewport) and a qualitative **design-fidelity** pass against
+the Figma frames. See [docs/requirements.md](docs/requirements.md#testing).
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Workflow
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Branch off `develop` as `feature/<issue>-<slug>`; one issue → one branch → one PR
+into `develop`; squash-merge after review. Lint + unit + e2e green before opening a PR.

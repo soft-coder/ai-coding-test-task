@@ -40,9 +40,7 @@ App scope:
 
 > Finalize these right after scaffold and keep them accurate — Claude Code relies on them.
 
-- Install: `npm ci` / `npm install` — run on the **host**. The repo lives on a
-  VirtualBox shared folder where installing `node_modules` is extremely slow; the
-  assistant hands install commands to the user and runs lint/build/test/e2e itself.
+- Install: `npm ci` / `npm install` (the assistant runs these directly).
 - Dev server: `npm start` (`ng serve`)
 - Unit tests: `npm test`
 - Lint: `npm run lint`
@@ -98,10 +96,12 @@ Screenshot hygiene:
 - Two-layer visual testing (regression gate + qualitative fidelity).
 - Repo-as-source-of-truth to survive lack of cross-session chat memory.
 - UI library: **PrimeNG 19** (design is PrimeNG-native); theme via runtime preset.
-- Table body on **Angular CDK** virtual scroll — infinite scroll, API has no total count.
+- Table body on **Angular CDK** virtual scroll (API has no total count).
+- Listing/search/sort **client-side** — backend ignores `pageNumber`/`search`/`sortDesc`
+  and returns the full list; client still sends the params but filters/sorts/windows
+  locally. See `docs/decisions.md` (D1).
 - JWT (`token` + `refreshToken`) in **localStorage**; transparent refresh on 401.
 - Add/edit as **routed dialogs** at `/categories/:id`.
 - API client **generated** from OpenAPI (`openapi-generator-cli`), not hand-written.
-- Repo on a VirtualBox shared folder → installs run on the host (see Commands).
 - Public pet project → backend host/spec URLs, Figma link, and test credentials
   stay out of git (local env config only).
