@@ -8,7 +8,14 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "gen:env": "node scripts/generate-environment.mjs",
+    "gen:api": "node scripts/gen-api.mjs",
+    "postinstall": "node scripts/generate-environment.mjs",
+    "prestart": "node scripts/generate-environment.mjs",
+    "prebuild": "node scripts/generate-environment.mjs",
+    "pretest": "node scripts/generate-environment.mjs",
+    "prelint": "node scripts/generate-environment.mjs"
   },
   "private": true,
   "dependencies": {
@@ -35,6 +42,7 @@
     "@angular/cli": "^19.2.27",
     "@angular/compiler-cli": "^19.2.0",
     "@eslint/js": "^9.39.4",
+    "@openapitools/openapi-generator-cli": "^2.38.0",
     "@playwright/test": "^1.61.0",
     "@types/jasmine": "~5.1.0",
     "angular-eslint": "^19.8.1",

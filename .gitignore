@@ -53,6 +53,9 @@ testem.log
 .env.*
 !.env.example
 
+# Generated from .env at install/build time (keeps the backend URL out of git)
+/src/environments/environment.ts
+
 # Scratch Figma screenshots (committed reference copies live under docs/design/)
 /_design
 
