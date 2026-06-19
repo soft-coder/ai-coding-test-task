@@ -98,7 +98,10 @@ Screenshot hygiene:
 - Two-layer visual testing (regression gate + qualitative fidelity).
 - Repo-as-source-of-truth to survive lack of cross-session chat memory.
 - UI library: **PrimeNG 19** (design is PrimeNG-native); theme via runtime preset.
-- Table body on **Angular CDK** virtual scroll — infinite scroll, API has no total count.
+- Table body on **Angular CDK** virtual scroll (API has no total count).
+- Listing/search/sort **client-side** — backend ignores `pageNumber`/`search`/`sortDesc`
+  and returns the full list; client still sends the params but filters/sorts/windows
+  locally. See `docs/decisions.md` (D1).
 - JWT (`token` + `refreshToken`) in **localStorage**; transparent refresh on 401.
 - Add/edit as **routed dialogs** at `/categories/:id`.
 - API client **generated** from OpenAPI (`openapi-generator-cli`), not hand-written.
