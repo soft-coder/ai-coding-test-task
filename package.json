@@ -8,7 +8,14 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "gen:env": "node scripts/generate-environment.mjs",
+    "gen:api": "node scripts/gen-api.mjs",
+    "postinstall": "node scripts/generate-environment.mjs",
+    "prestart": "node scripts/generate-environment.mjs",
+    "prebuild": "node scripts/generate-environment.mjs",
+    "pretest": "node scripts/generate-environment.mjs",
+    "prelint": "node scripts/generate-environment.mjs"
   },
   "private": true,
   "dependencies": {
