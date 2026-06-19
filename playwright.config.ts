@@ -17,13 +17,13 @@ export default defineConfig({
   retries: 0,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:4200',
+    baseURL: 'http://127.0.0.1:4200',
     viewport: { width: 1920, height: 1080 },
     deviceScaleFactor: 1,
     trace: 'on-first-retry',
   },
   expect: {
-    // Screenshot stabilization needs more headroom on the slow shared-folder env.
+    // A little extra headroom for screenshot stabilization.
     timeout: 20_000,
     toHaveScreenshot: { maxDiffPixelRatio: 0.01 },
   },
@@ -34,11 +34,11 @@ export default defineConfig({
     },
   ],
   webServer: {
-    // Serve the built app statically (see e2e/serve-dist.mjs for why not `ng serve`).
-    // `npm run e2e` runs `ng build` first, so the static server starts instantly.
-    command: 'node e2e/serve-dist.mjs',
-    url: 'http://localhost:4200',
+    // Bind ng serve to IPv4 so Playwright's readiness probe matches the host it
+    // polls — `localhost` resolves to IPv6 (::1) on Windows and the probe hangs.
+    command: 'npm start -- --host 127.0.0.1',
+    url: 'http://127.0.0.1:4200',
     reuseExistingServer: !process.env['CI'],
-    timeout: 60_000,
+    timeout: 120_000,
   },
 });
