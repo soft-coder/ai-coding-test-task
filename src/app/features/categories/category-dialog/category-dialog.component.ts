@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnInit,
+  computed,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -33,6 +42,8 @@ export class CategoryDialogComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly store = inject(CategoriesStore);
   private readonly messages = inject(MessageService);
+
+  private readonly nameInput = viewChild<ElementRef<HTMLInputElement>>('nameInput');
 
   /** Edited record id; `null` in add mode. */
   readonly id = signal<number | null>(null);
@@ -107,6 +118,14 @@ export class CategoryDialogComponent implements OnInit {
         this.messages.add({ severity: 'error', summary: 'Error', detail: httpErrorMessage(err) });
       },
     });
+  }
+
+  /**
+   * Move focus to the Name field when the dialog opens, instead of PrimeNG's
+   * default (the header close button — which otherwise shows a focus ring).
+   */
+  focusName(): void {
+    this.nameInput()?.nativeElement.focus();
   }
 
   close(): void {

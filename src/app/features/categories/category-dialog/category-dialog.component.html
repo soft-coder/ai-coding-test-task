@@ -3,21 +3,17 @@
   [modal]="true"
   [draggable]="false"
   [resizable]="false"
+  [focusOnShow]="false"
   [style]="{ width: '440px' }"
   [header]="title()"
+  (onShow)="focusName()"
   (onHide)="close()"
 >
   <form class="dialog" [formGroup]="form" (ngSubmit)="save()" novalidate>
-    @if (isEdit()) {
-      <div class="dialog__field">
-        <span class="dialog__label">Id</span>
-        <span class="dialog__readonly">{{ id() }}</span>
-      </div>
-    }
-
     <div class="dialog__field">
       <label for="name">Name</label>
       <input
+        #nameInput
         pInputText
         id="name"
         formControlName="name"

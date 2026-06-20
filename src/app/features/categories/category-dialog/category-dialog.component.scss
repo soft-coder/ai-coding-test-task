@@ -10,19 +10,13 @@
   gap: 6px;
 }
 
-.dialog__field label,
-.dialog__label {
+.dialog__field label {
   font-size: 13px;
   color: var(--color-text-secondary);
 }
 
 .dialog__field input {
   width: 100%;
-}
-
-.dialog__readonly {
-  padding: 4px 0;
-  color: var(--color-text-primary);
 }
 
 .dialog__error {
