@@ -1,0 +1,72 @@
+<div class="layout">
+  <aside class="rail">
+    <button type="button" class="rail__btn" title="Collapse menu" aria-label="Collapse menu">
+      <i class="pi pi-angle-double-left"></i>
+    </button>
+    <button type="button" class="rail__btn" title="Tree" aria-label="Tree">
+      <i class="pi pi-sitemap"></i>
+    </button>
+    <button type="button" class="rail__btn rail__btn--active" title="Categories" aria-label="Categories">
+      <i class="pi pi-cog"></i>
+    </button>
+
+    <span class="rail__spacer"></span>
+
+    <button type="button" class="rail__btn" title="Profile" aria-label="Profile">
+      <i class="pi pi-user"></i>
+    </button>
+    <button type="button" class="rail__btn" title="Log out" aria-label="Log out" (click)="logout()">
+      <i class="pi pi-sign-out"></i>
+    </button>
+  </aside>
+
+  <main class="content">
+    <header class="content__header">
+      <h1 class="content__title">Categories</h1>
+      @if (store.canAdd()) {
+        <a class="add" routerLink="/categories/new">
+          <i class="pi pi-plus"></i>
+          <span>Add</span>
+        </a>
+      }
+    </header>
+
+    <input
+      pInputText
+      class="search"
+      type="search"
+      placeholder="Search"
+      [value]="store.search()"
+      (input)="onSearch($event)"
+    />
+
+    @if (store.loading()) {
+      <div class="state">
+        <i class="pi pi-spin pi-spinner"></i>
+      </div>
+    } @else if (store.error()) {
+      <div class="state state--error">{{ store.error() }}</div>
+    } @else {
+      <div class="table">
+        <div class="table__head">
+          <button type="button" class="table__col table__col--name table__sort" (click)="store.toggleSort()">
+            <span>Name</span>
+            <i class="pi" [class.pi-sort-amount-up-alt]="!store.sortDesc()" [class.pi-sort-amount-down]="store.sortDesc()"></i>
+          </button>
+          <div class="table__col table__col--id">Id</div>
+        </div>
+
+        @if (store.isEmpty()) {
+          <div class="state">No categories found.</div>
+        } @else {
+          <cdk-virtual-scroll-viewport itemSize="44" class="table__body">
+            <div *cdkVirtualFor="let category of store.visible()" class="table__row">
+              <span class="table__col table__col--name">{{ category.name }}</span>
+              <span class="table__col table__col--id">{{ category.id }}</span>
+            </div>
+          </cdk-virtual-scroll-viewport>
+        }
+      </div>
+    }
+  </main>
+</div>
