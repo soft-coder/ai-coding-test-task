@@ -15,7 +15,14 @@ describe('CategoriesStore', () => {
   ];
 
   beforeEach(() => {
-    api = jasmine.createSpyObj<CategoriesService>('CategoriesService', ['getAll']);
+    api = jasmine.createSpyObj<CategoriesService>('CategoriesService', [
+      'getAll',
+      'getById',
+      'nameExists',
+      'add',
+      'update',
+      '_delete',
+    ]);
     TestBed.configureTestingModule({
       providers: [CategoriesStore, { provide: CategoriesService, useValue: api }],
     });
@@ -50,5 +57,35 @@ describe('CategoriesStore', () => {
     store.load();
     expect(store.error()).toBeTruthy();
     expect(store.loading()).toBeFalse();
+  });
+
+  it('add posts the name and reloads the list', () => {
+    (api.add as jasmine.Spy).and.returnValue(of(42));
+    (api.getAll as jasmine.Spy).and.returnValue(of({ items, canAdd: true }));
+    store.add('New').subscribe();
+    expect(api.add).toHaveBeenCalledWith({ name: 'New' });
+    expect(api.getAll).toHaveBeenCalled();
+  });
+
+  it('update posts to the id and reloads the list', () => {
+    (api.update as jasmine.Spy).and.returnValue(of(undefined));
+    (api.getAll as jasmine.Spy).and.returnValue(of({ items, canAdd: true }));
+    store.update(7, 'Renamed').subscribe();
+    expect(api.update).toHaveBeenCalledWith(7, { name: 'Renamed' });
+    expect(api.getAll).toHaveBeenCalled();
+  });
+
+  it('remove deletes by id and reloads the list', () => {
+    (api._delete as jasmine.Spy).and.returnValue(of(undefined));
+    (api.getAll as jasmine.Spy).and.returnValue(of({ items, canAdd: true }));
+    store.remove(3).subscribe();
+    expect(api._delete).toHaveBeenCalledWith(3);
+    expect(api.getAll).toHaveBeenCalled();
+  });
+
+  it('nameExists forwards name and id to the API', () => {
+    (api.nameExists as jasmine.Spy).and.returnValue(of(true));
+    store.nameExists('dup', 5).subscribe();
+    expect(api.nameExists).toHaveBeenCalledWith('dup', 5);
   });
 });

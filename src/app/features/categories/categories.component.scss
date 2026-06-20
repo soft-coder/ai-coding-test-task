@@ -132,6 +132,14 @@
   height: 44px;
   border-bottom: 1px solid var(--color-stroke);
   color: var(--color-text-primary);
+
+  &--clickable {
+    cursor: pointer;
+
+    &:hover {
+      background: var(--color-selected);
+    }
+  }
 }
 
 .table__col {
@@ -151,6 +159,39 @@
     flex: 0 0 200px;
     color: var(--color-text-secondary);
   }
+
+  &--actions {
+    flex: 0 0 64px;
+    justify-content: center;
+  }
+}
+
+.table__action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-danger);
+    background: var(--color-surface-alt);
+  }
+}
+
+.confirm__text {
+  margin: 0 0 20px;
+  color: var(--color-text-primary);
+}
+
+.confirm__actions {
+  display: flex;
+  gap: 12px;
 }
 
 .table__sort {

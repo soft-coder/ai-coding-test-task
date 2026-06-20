@@ -4,11 +4,23 @@ import Aura from '@primeng/themes/aura';
 /**
  * PrimeNG theme preset aligned to the Zidium Figma design.
  *
- * The primary ramp is anchored at `500 = #005baa` (Figma `--base/primary`), the
- * color PrimeNG resolves for primary button/control backgrounds in the light
- * scheme. Surface/text/danger fidelity is refined in the feature PRs that render
- * those controls.
+ * The primary ramp is anchored at `500 = #005baa` (Figma `--base/primary`) and the
+ * red ramp at `500 = #a9120a` (Figma `--base/danger`) — the colors PrimeNG resolves
+ * for primary and danger button backgrounds in the light scheme.
  */
+const danger = {
+  background: '#a9120a',
+  hoverBackground: '#981009',
+  activeBackground: '#7f0e08',
+  borderColor: '#a9120a',
+  hoverBorderColor: '#981009',
+  activeBorderColor: '#7f0e08',
+  color: '#ffffff',
+  hoverColor: '#ffffff',
+  activeColor: '#ffffff',
+  focusRing: { color: '#a9120a', shadow: 'none' },
+};
+
 export const AppPreset = definePreset(Aura, {
   semantic: {
     primary: {
@@ -23,6 +35,15 @@ export const AppPreset = definePreset(Aura, {
       800: '#004077',
       900: '#002e55',
       950: '#00203c',
+    },
+  },
+  components: {
+    // The danger button resolves to PrimeNG's bright `{red.500}`; pin it to the
+    // Figma danger red (#a9120a) so the delete action matches the design.
+    button: {
+      colorScheme: {
+        light: { root: { danger } },
+      },
     },
   },
 });

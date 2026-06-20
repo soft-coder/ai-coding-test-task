@@ -1,0 +1,51 @@
+<p-dialog
+  [visible]="true"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '440px' }"
+  [header]="title()"
+  (onHide)="close()"
+>
+  <form class="dialog" [formGroup]="form" (ngSubmit)="save()" novalidate>
+    @if (isEdit()) {
+      <div class="dialog__field">
+        <span class="dialog__label">Id</span>
+        <span class="dialog__readonly">{{ id() }}</span>
+      </div>
+    }
+
+    <div class="dialog__field">
+      <label for="name">Name</label>
+      <input
+        pInputText
+        id="name"
+        formControlName="name"
+        autocomplete="off"
+        [class.ng-invalid]="showNameError()"
+        [class.ng-dirty]="showNameError()"
+      />
+      @if (showNameError()) {
+        <small class="dialog__error">
+          @if (form.controls.name.hasError('required')) {
+            Field is required
+          } @else if (form.controls.name.hasError('nameTaken')) {
+            This name is already taken
+          }
+        </small>
+      }
+    </div>
+
+    <div class="dialog__actions">
+      <p-button type="button" label="Close" severity="secondary" (onClick)="close()" />
+      @if (canEdit()) {
+        <p-button
+          type="submit"
+          label="Save"
+          [loading]="saving()"
+          [disabled]="form.invalid || form.pending"
+        />
+      }
+    </div>
+  </form>
+</p-dialog>
