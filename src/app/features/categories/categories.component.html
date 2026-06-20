@@ -49,11 +49,11 @@
     } @else {
       <div class="table">
         <div class="table__head">
+          <div class="table__col table__col--id">Id</div>
           <button type="button" class="table__col table__col--name table__sort" (click)="store.toggleSort()">
             <span>Name</span>
             <i class="pi" [class.pi-sort-amount-up-alt]="!store.sortDesc()" [class.pi-sort-amount-down]="store.sortDesc()"></i>
           </button>
-          <div class="table__col table__col--id">Id</div>
         </div>
 
         @if (store.isEmpty()) {
@@ -61,8 +61,8 @@
         } @else {
           <cdk-virtual-scroll-viewport itemSize="44" class="table__body">
             <div *cdkVirtualFor="let category of store.visible()" class="table__row">
-              <span class="table__col table__col--name">{{ category.name }}</span>
               <span class="table__col table__col--id">{{ category.id }}</span>
+              <span class="table__col table__col--name">{{ category.name }}</span>
             </div>
           </cdk-virtual-scroll-viewport>
         }
