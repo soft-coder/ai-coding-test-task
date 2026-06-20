@@ -1,18 +1,20 @@
 import { test, expect } from '@playwright/test';
 
-/**
- * Scaffold smoke + a first visual baseline to prove the e2e/visual pipeline.
- * Per-screen baselines land in their feature PRs.
- */
+/** Boot + auth-gating smoke. Per-screen visual baselines live in their feature specs. */
 
-test('boots and redirects to /categories', async ({ page }) => {
+test('unauthenticated boot redirects to /login', async ({ page }) => {
   await page.goto('/');
-  await expect(page).toHaveURL(/\/categories$/);
-  await expect(page.getByRole('heading', { name: 'Categories' })).toBeVisible();
+  // Guard appends ?returnUrl=… so match the path, not end-of-string.
+  await expect(page).toHaveURL(/\/login(\?|$)/);
+  await expect(page.getByRole('heading', { name: 'Logon to Zidium' })).toBeVisible();
 });
 
-test('categories placeholder matches baseline', async ({ page }) => {
-  await page.goto('/categories', { waitUntil: 'networkidle' });
-  await page.evaluate(() => document.fonts.ready);
-  await expect(page).toHaveScreenshot('categories-placeholder.png');
+test('a stored token lets the user reach /categories', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('auth.token', 'e2e-token');
+    localStorage.setItem('auth.refreshToken', 'e2e-refresh');
+  });
+  await page.goto('/categories');
+  await expect(page).toHaveURL(/\/categories$/);
+  await expect(page.getByRole('heading', { name: 'Categories' })).toBeVisible();
 });
