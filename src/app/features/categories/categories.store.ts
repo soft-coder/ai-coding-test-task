@@ -1,4 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { Observable, tap } from 'rxjs';
 
 import { CategoriesService } from '../../core/api/api/categories.service';
 import { ZidiumWebServiceFrontCategoryDto as CategoryDto } from '../../core/api/model/zidium-web-service-front-category-dto';
@@ -51,5 +52,30 @@ export class CategoriesStore {
 
   toggleSort(): void {
     this.sortDesc.update((desc) => !desc);
+  }
+
+  /** Single record fetch for the edit dialog (carries `canEdit` for read-only gating). */
+  getById(id: number): Observable<CategoryDto> {
+    return this.api.getById(id);
+  }
+
+  /** Server-side uniqueness check backing the async Name validator. `true` ⇒ taken. */
+  nameExists(name: string, id?: number): Observable<boolean> {
+    return this.api.nameExists(name, id);
+  }
+
+  /** Create, then refresh the list so the new row appears. Emits the new id. */
+  add(name: string): Observable<number> {
+    return this.api.add({ name }).pipe(tap(() => this.load()));
+  }
+
+  /** Update, then refresh the list. */
+  update(id: number, name: string): Observable<unknown> {
+    return this.api.update(id, { name }).pipe(tap(() => this.load()));
+  }
+
+  /** Delete, then refresh the list. */
+  remove(id: number): Observable<unknown> {
+    return this.api._delete(id).pipe(tap(() => this.load()));
   }
 }

@@ -54,15 +54,38 @@
             <span>Name</span>
             <i class="pi" [class.pi-sort-amount-up-alt]="!store.sortDesc()" [class.pi-sort-amount-down]="store.sortDesc()"></i>
           </button>
+          <div class="table__col table__col--actions"></div>
         </div>
 
         @if (store.isEmpty()) {
           <div class="state">No categories found.</div>
         } @else {
           <cdk-virtual-scroll-viewport itemSize="44" class="table__body">
-            <div *cdkVirtualFor="let category of store.visible()" class="table__row">
+            <div
+              *cdkVirtualFor="let category of store.visible()"
+              class="table__row"
+              [class.table__row--clickable]="category.canEdit"
+              [attr.role]="category.canEdit ? 'button' : null"
+              [attr.tabindex]="category.canEdit ? 0 : null"
+              (click)="openEdit(category)"
+              (keydown.enter)="openEdit(category)"
+              (keydown.space)="openEdit(category); $event.preventDefault()"
+            >
               <span class="table__col table__col--id">{{ category.id }}</span>
               <span class="table__col table__col--name">{{ category.name }}</span>
+              <span class="table__col table__col--actions">
+                @if (category.canDelete) {
+                  <button
+                    type="button"
+                    class="table__action"
+                    title="Delete"
+                    aria-label="Delete"
+                    (click)="askDelete($event, category)"
+                  >
+                    <i class="pi pi-trash"></i>
+                  </button>
+                }
+              </span>
             </div>
           </cdk-virtual-scroll-viewport>
         }
@@ -70,3 +93,29 @@
     }
   </main>
 </div>
+
+<!-- Add/Edit routed dialog renders here, over the list. -->
+<router-outlet />
+
+<!-- Delete confirmation. -->
+<p-dialog
+  [visible]="deleteTarget() !== null"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '424px', borderRadius: '12px' }"
+  header="Confirmation"
+  (onHide)="cancelDelete()"
+>
+  <p class="confirm__text">Sure to delete this element?</p>
+  <div class="confirm__actions">
+    <p-button type="button" label="Close" severity="secondary" (onClick)="cancelDelete()" />
+    <p-button
+      type="button"
+      label="Delete"
+      severity="danger"
+      [loading]="deleting()"
+      (onClick)="confirmDelete()"
+    />
+  </div>
+</p-dialog>

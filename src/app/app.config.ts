@@ -2,6 +2,7 @@ import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 
 import { routes } from './app.routes';
@@ -21,6 +22,7 @@ export const appConfig: ApplicationConfig = {
     // Base URL for the generated API client (from .env → environment).
     { provide: BASE_PATH, useValue: environment.apiBaseUrl },
     provideAnimationsAsync(),
+    MessageService,
     providePrimeNG({
       theme: {
         preset: AppPreset,

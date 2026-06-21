@@ -36,8 +36,9 @@ behind JWT auth. The primary deliverable is a clean, reviewable git workflow.
 ### Add / Edit (routed dialog at `/categories/:id`; add at `/categories/new`)
 
 - Figma `Справочник / Добавление` (title **Add**) and `… / Редактирование` (title **Edit**).
-- Fields per the brief for **this** reference: **Id** (read-only text, edit only) +
-  **Name** (input). `Close` (secondary) + `Save` (primary).
+- Field per the brief for **this** reference: **Name** (input). `Close` (secondary)
+  + `Save` (primary). (The Id is omitted from the dialog — it's not user-editable and
+  already visible in the list; keeping the dialog to the single editable field.)
 - `canEdit=false` → fields read-only, **Save** hidden.
 - **Name** is required and async-validated server-side (see name-exists below).
 
@@ -133,8 +134,8 @@ categories:
    reference uses **`Id`** + **`Name`** (per the brief; `CategoryDto` has no
    `description`).
 2. **Dialog fields:** the generic modal shows two inputs; categories has only
-   **Name** (editable) plus **Id** (read-only text, edit mode only) — `EditCategoryDto`
-   is `{ name }`.
+   **Name** (editable) — `EditCategoryDto` is `{ name }`. The Id is shown in the list,
+   not the dialog.
 
 ## Testing
 
