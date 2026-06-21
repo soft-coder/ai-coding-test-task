@@ -6,20 +6,10 @@
 // and written to a gitignored temp file. The generated client under
 // src/app/core/api IS committed, so the app builds without Java.
 import { execSync } from 'node:child_process';
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-function loadDotEnv() {
-  const env = {};
-  const path = join(process.cwd(), '.env');
-  if (!existsSync(path)) return env;
-  for (const line of readFileSync(path, 'utf8').split(/\r?\n/)) {
-    if (!line.trim() || line.trim().startsWith('#')) continue;
-    const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)\s*$/);
-    if (match) env[match[1]] = match[2].replace(/^["']|["']$/g, '');
-  }
-  return env;
-}
+import { loadDotEnv } from './load-dotenv.mjs';
 
 function assertJava() {
   try {
