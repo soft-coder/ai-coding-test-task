@@ -1,0 +1,49 @@
+<p-dialog
+  [visible]="true"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [focusOnShow]="false"
+  [style]="{ width: '600px', borderRadius: '12px' }"
+  [header]="title()"
+  (onShow)="focusName()"
+  (onHide)="close()"
+>
+  <form class="dialog" [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <div class="dialog__field">
+      <label for="name">Name</label>
+      <input
+        #nameInput
+        pInputText
+        id="name"
+        formControlName="name"
+        autocomplete="off"
+        [attr.aria-invalid]="showNameError()"
+        [attr.aria-describedby]="showNameError() ? 'name-error' : null"
+        [class.ng-invalid]="showNameError()"
+        [class.ng-dirty]="showNameError()"
+      />
+      @if (showNameError()) {
+        <small id="name-error" class="dialog__error" role="alert">
+          @if (form.controls.name.hasError('required')) {
+            Field is required
+          } @else if (form.controls.name.hasError('nameTaken')) {
+            This name is already taken
+          }
+        </small>
+      }
+    </div>
+
+    <div class="dialog__actions">
+      <p-button type="button" label="Close" severity="secondary" (onClick)="close()" />
+      @if (canEdit()) {
+        <p-button
+          type="submit"
+          label="Save"
+          [loading]="saving()"
+          [disabled]="form.invalid || form.pending"
+        />
+      }
+    </div>
+  </form>
+</p-dialog>

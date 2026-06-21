@@ -1,0 +1,32 @@
+/* Global styles. PrimeNG components are themed via the runtime preset
+ * (see src/app/core/theme/app-preset.ts); this file only sets app-wide
+ * typography/reset aligned to the Zidium Figma design. */
+
+:root {
+  --app-font-family: 'Roboto', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+
+  /* Figma design tokens (reused by feature styles). */
+  --color-text-primary: #263238;
+  --color-text-secondary: #677379;
+  --color-stroke: #dee2e6;
+  --color-primary: #005baa;
+  --color-danger: #a9120a;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f4f4f5;
+  --color-window: #f9fafc; /* Figma Base/Window */
+  --color-selected: #edf4fb; /* Figma Hovers/Previously selected */
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--app-font-family);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+}

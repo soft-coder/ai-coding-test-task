@@ -1,27 +1,46 @@
-# Dependencies
-/node_modules
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-# Angular build output
+# Compiled output
 /dist
 /tmp
 /out-tsc
 /bazel-out
-/.angular/cache
 
-# IDE / tooling
+# Node
+/node_modules
+npm-debug.log*
+yarn-error.log
+
+# IDEs and editors
 .idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
 .vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
 !.vscode/extensions.json
-.DS_Store
-Thumbs.db
+.history/*
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
 
 # Local Claude Code settings (machine-specific)
 .claude/settings.local.json
 
-# Test / coverage output
-/coverage
-
-# Playwright (regenerated each run — baselines are committed separately)
+# Playwright (regenerated each run — visual baselines are committed separately)
 /test-results
 /playwright-report
 /blob-report
@@ -29,9 +48,17 @@ Thumbs.db
 *-actual.png
 *-diff.png
 
-# Logs / env
-*.log
-npm-debug.log*
+# Env
 .env
 .env.*
 !.env.example
+
+# Generated from .env at install/build time (keeps the backend URL out of git)
+/src/environments/environment.ts
+
+# Scratch Figma screenshots (committed reference copies live under docs/design/)
+/_design
+
+# System files
+.DS_Store
+Thumbs.db

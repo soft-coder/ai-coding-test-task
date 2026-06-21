@@ -24,14 +24,23 @@ App scope:
   (`signal`/`computed`/`effect`, `input()`/`output()`/`model()`),
   **new control flow** (`@if`/`@for`/`@switch`/`@defer`), `inject()`,
   **functional** guards & interceptors.
-- Virtual scroll: Angular CDK (`cdk-virtual-scroll-viewport`).
+- **UI: PrimeNG 19** (`primeng` + `@primeng/themes` + `primeicons`). The Figma
+  design maps directly onto PrimeNG controls (inputtext, button, dialog). Theme
+  via a runtime preset (`src/app/core/theme/app-preset.ts`) anchored to the Figma
+  palette (primary `#005baa`, danger `#a9120a`, font Roboto).
+- Virtual scroll: **Angular CDK** (`cdk-virtual-scroll-viewport`) for the table
+  body — the list API returns no total count, so CDK's append-driven
+  virtualization fits infinite scroll better than a total-aware grid.
+- API client generated from the backend `front` OpenAPI via
+  `openapitools/openapi-generator-cli`. The API base URL is read from a gitignored
+  environment config (not committed — a `.env.example` placeholder ships instead).
 - RxJS where it fits (HTTP, streams); prefer signals for component state.
 
 ## Commands
 
 > Finalize these right after scaffold and keep them accurate — Claude Code relies on them.
 
-- Install: `npm ci`
+- Install: `npm ci` / `npm install` (the assistant runs these directly).
 - Dev server: `npm start` (`ng serve`)
 - Unit tests: `npm test`
 - Lint: `npm run lint`
@@ -69,11 +78,14 @@ Screenshot hygiene:
 - Clear names and small files over heavy commenting.
 - Keep this file + `docs/` current — the repo is the durable context, not the chat.
 
-## Open inputs still needed
+## Open inputs — resolved
 
-- [ ] Task description document (drives `docs/requirements.md`).
-- [ ] Backend API: OpenAPI/Swagger JSON → generate TypeScript interfaces from it.
-- [ ] Figma design link → connect Figma MCP for component extraction / fidelity checks.
+- [x] Task: **Справочник категорий** (categories reference) → `docs/requirements.md`.
+- [x] Backend API: the `front` OpenAPI spec → TS client via `openapi-generator-cli`.
+      The API host, spec URL, and test credentials are kept out of the repo
+      (provided locally — this is a public pet project).
+- [x] Figma design → connected via Figma MCP locally for fidelity checks. The
+      design link is **not** committed (private file).
 
 ## Decisions log
 
@@ -83,3 +95,13 @@ Screenshot hygiene:
   locally. In Claude Code, the assistant runs them directly with user approval.
 - Two-layer visual testing (regression gate + qualitative fidelity).
 - Repo-as-source-of-truth to survive lack of cross-session chat memory.
+- UI library: **PrimeNG 19** (design is PrimeNG-native); theme via runtime preset.
+- Table body on **Angular CDK** virtual scroll (API has no total count).
+- Listing/search/sort **client-side** — backend ignores `pageNumber`/`search`/`sortDesc`
+  and returns the full list; client still sends the params but filters/sorts/windows
+  locally. See `docs/decisions.md` (D1).
+- JWT (`token` + `refreshToken`) in **localStorage**; transparent refresh on 401.
+- Add/edit as **routed dialogs** at `/categories/:id`.
+- API client **generated** from OpenAPI (`openapi-generator-cli`), not hand-written.
+- Public pet project → backend host/spec URLs, Figma link, and test credentials
+  stay out of git (local env config only).
