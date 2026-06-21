@@ -9,11 +9,13 @@
         id="login"
         formControlName="login"
         autocomplete="username"
+        [attr.aria-invalid]="showError('login')"
+        [attr.aria-describedby]="showError('login') ? 'login-error' : null"
         [class.ng-invalid]="showError('login')"
         [class.ng-dirty]="showError('login')"
       />
       @if (showError('login')) {
-        <small class="login__error">Field is required</small>
+        <small id="login-error" class="login__error">Field is required</small>
       }
     </div>
 
@@ -25,16 +27,18 @@
         type="password"
         formControlName="password"
         autocomplete="current-password"
+        [attr.aria-invalid]="showError('password')"
+        [attr.aria-describedby]="showError('password') ? 'password-error' : null"
         [class.ng-invalid]="showError('password')"
         [class.ng-dirty]="showError('password')"
       />
       @if (showError('password')) {
-        <small class="login__error">Field is required</small>
+        <small id="password-error" class="login__error">Field is required</small>
       }
     </div>
 
     @if (serverError(); as error) {
-      <p class="login__error login__error--server">{{ error }}</p>
+      <p class="login__error login__error--server" role="alert">{{ error }}</p>
     }
 
     <div class="login__actions">

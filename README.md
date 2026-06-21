@@ -29,6 +29,14 @@ npm start                   # dev server at http://localhost:4200
 The API base URL and credentials are not committed. Copy `.env.example` to `.env`
 and fill in the local values (added with the API layer).
 
+> **CORS during local dev:** the public `front` backend doesn't send
+> `Access-Control-Allow-Origin` for `localhost`, so live API calls from
+> `npm start` are blocked by the browser. Use a CORS-bypass extension while
+> developing (e.g. [CORS Everywhere](https://addons.mozilla.org/firefox/addon/cors-everywhere/)
+> for Firefox, or an equivalent for Chrome) and enable it for the app tab. This
+> only affects calls to the real API — the Playwright e2e suite mocks the backend,
+> so it needs no such workaround.
+
 ## Commands
 
 | Command | What it does |

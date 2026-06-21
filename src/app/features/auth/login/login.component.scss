@@ -8,18 +8,18 @@
 .login__card {
   box-sizing: border-box;
   width: 439px;
-  padding: 25px 20px;
+  padding: 25px 20px 20px;
   display: flex;
   flex-direction: column;
   background: var(--color-surface);
   border: 1px solid var(--color-stroke);
-  border-radius: 8px;
+  border-radius: 15px;
 }
 
 .login__title {
-  margin: 0 0 16px;
+  margin: 0 0 15px;
   text-align: center;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 500;
   color: var(--color-text-primary);
 }
@@ -30,7 +30,7 @@
   margin-bottom: 15px;
 
   label {
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     font-size: 14px;
     color: var(--color-text-secondary);
   }
@@ -53,5 +53,5 @@
 .login__actions {
   display: flex;
   justify-content: center;
-  margin-top: 5px;
+  margin-top: 10px; /* 15px field gap + 10px = 25px to the button, per Figma */
 }

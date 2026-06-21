@@ -9,13 +9,13 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "playwright test",
-    "gen:env": "node scripts/generate-environment.mjs",
+    "gen:env": "node scripts/gen-env.mjs",
     "gen:api": "node scripts/gen-api.mjs",
-    "postinstall": "node scripts/generate-environment.mjs",
-    "prestart": "node scripts/generate-environment.mjs",
-    "prebuild": "node scripts/generate-environment.mjs",
-    "pretest": "node scripts/generate-environment.mjs",
-    "prelint": "node scripts/generate-environment.mjs"
+    "postinstall": "node scripts/gen-env.mjs",
+    "prestart": "node scripts/gen-env.mjs",
+    "prebuild": "node scripts/gen-env.mjs",
+    "pretest": "node scripts/gen-env.mjs",
+    "prelint": "node scripts/gen-env.mjs"
   },
   "private": true,
   "dependencies": {
