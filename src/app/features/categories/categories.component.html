@@ -36,21 +36,27 @@
       class="search"
       type="search"
       placeholder="Search"
+      aria-label="Search categories"
       [value]="store.search()"
       (input)="onSearch($event)"
     />
 
     @if (store.loading()) {
-      <div class="state">
+      <div class="state" role="status" aria-label="Loading categories">
         <i class="pi pi-spin pi-spinner"></i>
       </div>
     } @else if (store.error()) {
-      <div class="state state--error">{{ store.error() }}</div>
+      <div class="state state--error" role="alert">{{ store.error() }}</div>
     } @else {
       <div class="table">
         <div class="table__head">
           <div class="table__col table__col--id">Id</div>
-          <button type="button" class="table__col table__col--name table__sort" (click)="store.toggleSort()">
+          <button
+            type="button"
+            class="table__col table__col--name table__sort"
+            [attr.aria-label]="'Sort by name, ' + (store.sortDesc() ? 'descending' : 'ascending')"
+            (click)="store.toggleSort()"
+          >
             <span>Name</span>
             <i class="pi" [class.pi-sort-amount-up-alt]="!store.sortDesc()" [class.pi-sort-amount-down]="store.sortDesc()"></i>
           </button>
@@ -67,6 +73,7 @@
               [class.table__row--clickable]="category.canEdit"
               [attr.role]="category.canEdit ? 'button' : null"
               [attr.tabindex]="category.canEdit ? 0 : null"
+              [attr.aria-label]="category.canEdit ? 'Edit ' + category.name : null"
               (click)="openEdit(category)"
               (keydown.enter)="openEdit(category)"
               (keydown.space)="openEdit(category); $event.preventDefault()"
@@ -79,7 +86,7 @@
                     type="button"
                     class="table__action"
                     title="Delete"
-                    aria-label="Delete"
+                    [attr.aria-label]="'Delete ' + category.name"
                     (click)="askDelete($event, category)"
                   >
                     <i class="pi pi-trash"></i>

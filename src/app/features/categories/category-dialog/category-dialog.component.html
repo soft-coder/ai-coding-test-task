@@ -18,11 +18,13 @@
         id="name"
         formControlName="name"
         autocomplete="off"
+        [attr.aria-invalid]="showNameError()"
+        [attr.aria-describedby]="showNameError() ? 'name-error' : null"
         [class.ng-invalid]="showNameError()"
         [class.ng-dirty]="showNameError()"
       />
       @if (showNameError()) {
-        <small class="dialog__error">
+        <small id="name-error" class="dialog__error" role="alert">
           @if (form.controls.name.hasError('required')) {
             Field is required
           } @else if (form.controls.name.hasError('nameTaken')) {

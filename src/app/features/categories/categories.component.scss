@@ -16,8 +16,7 @@
   align-items: center;
   gap: 8px;
   padding: 20px 0;
-  border-right: 1px solid var(--color-stroke);
-  background: var(--color-surface);
+  background: var(--color-window); /* Figma Menu bg #f9fafc; separates from white content */
 }
 
 .rail__spacer {
