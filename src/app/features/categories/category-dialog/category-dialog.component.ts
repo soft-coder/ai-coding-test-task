@@ -17,6 +17,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { httpErrorMessage } from '../../../core/http/http-error-message';
+import { ZidiumWebServiceFrontCategoryDto as CategoryDto } from '../../../core/api/model/zidium-web-service-front-category-dto';
 import { CategoriesStore } from '../categories.store';
 import { nameExistsValidator } from '../name-exists.validator';
 
@@ -24,8 +25,8 @@ import { nameExistsValidator } from '../name-exists.validator';
  * Routed Add/Edit dialog for a category.
  *
  * `/categories/new` opens in add mode; `/categories/:id` loads the record and opens
- * in edit mode (Id shown as read-only text, Name editable). `canEdit=false` renders
- * the form read-only and hides Save. Closing navigates back to the list; the shared
+ * in edit mode with the Name field populated. `canEdit=false` renders the form
+ * read-only and hides Save. Closing navigates back to the list; the shared
  * {@link CategoriesStore} (inherited from the parent route's injector) refreshes the
  * list after a successful save.
  */
@@ -65,34 +66,53 @@ export class CategoryDialogComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam === null) {
-      return; // add mode
+    const id = this.readRouteId();
+    if (id !== null) {
+      this.loadForEdit(id);
     }
+  }
 
-    const id = Number(idParam);
+  /** Parse the `:id` route param; `null` means add mode (the `/new` path). */
+  private readRouteId(): number | null {
+    const param = this.route.snapshot.paramMap.get('id');
+    return param === null ? null : Number(param);
+  }
+
+  /** Enter edit mode: rebind the id-aware Name validator and fetch the record. */
+  private loadForEdit(id: number): void {
     this.id.set(id);
-    // Re-bind the async validator with the current id so the record's own name passes.
+    this.bindNameValidator(id);
+    this.fetchCategory(id);
+  }
+
+  /** Rebind the async validator with the current id so the record's own name passes. */
+  private bindNameValidator(id: number): void {
     this.form.controls.name.setAsyncValidators(
       nameExistsValidator((name, currentId) => this.store.nameExists(name, currentId), id),
     );
+  }
 
+  private fetchCategory(id: number): void {
     this.loading.set(true);
     this.store.getById(id).subscribe({
-      next: (category) => {
-        this.canEdit.set(category.canEdit);
-        this.form.controls.name.setValue(category.name);
-        if (!category.canEdit) {
-          this.form.disable();
-        }
-        this.loading.set(false);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.loading.set(false);
-        this.messages.add({ severity: 'error', summary: 'Error', detail: httpErrorMessage(err) });
-        this.close();
-      },
+      next: (category) => this.onCategoryLoaded(category),
+      error: (err: HttpErrorResponse) => this.onLoadError(err),
     });
+  }
+
+  private onCategoryLoaded(category: CategoryDto): void {
+    this.canEdit.set(category.canEdit);
+    this.form.controls.name.setValue(category.name);
+    if (!category.canEdit) {
+      this.form.disable();
+    }
+    this.loading.set(false);
+  }
+
+  private onLoadError(err: HttpErrorResponse): void {
+    this.loading.set(false);
+    this.messages.add({ severity: 'error', summary: 'Error', detail: httpErrorMessage(err) });
+    this.close();
   }
 
   save(): void {

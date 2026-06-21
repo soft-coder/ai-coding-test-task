@@ -6,12 +6,20 @@ import { of } from 'rxjs';
 
 import { CategoryDialogComponent } from './category-dialog.component';
 import { CategoriesStore } from '../categories.store';
+import { ZidiumWebServiceFrontCategoryDto as CategoryDto } from '../../../core/api/model/zidium-web-service-front-category-dto';
 
 describe('CategoryDialogComponent', () => {
   let store: jasmine.SpyObj<CategoriesStore>;
   let router: jasmine.SpyObj<Router>;
 
-  function setup(idParam: string | null): ComponentFixture<CategoryDialogComponent> {
+  /**
+   * Builds the component for the given route id (`null` → add mode). Pass a
+   * `category` to stub the edit-mode `getById` response.
+   */
+  function setup(
+    idParam: string | null,
+    category?: CategoryDto,
+  ): ComponentFixture<CategoryDialogComponent> {
     store = jasmine.createSpyObj<CategoriesStore>('CategoriesStore', [
       'getById',
       'nameExists',
@@ -19,6 +27,9 @@ describe('CategoryDialogComponent', () => {
       'update',
     ]);
     store.nameExists.and.returnValue(of(false));
+    if (category) {
+      store.getById.and.returnValue(of(category));
+    }
     router = jasmine.createSpyObj<Router>('Router', ['navigate']);
 
     TestBed.configureTestingModule({
@@ -50,29 +61,7 @@ describe('CategoryDialogComponent', () => {
   });
 
   it('loads the record and switches to edit mode', () => {
-    store = jasmine.createSpyObj<CategoriesStore>('CategoriesStore', [
-      'getById',
-      'nameExists',
-      'add',
-      'update',
-    ]);
-    store.nameExists.and.returnValue(of(false));
-    store.getById.and.returnValue(of({ id: 7, name: 'Sensors', canEdit: true, canDelete: true }));
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
-
-    TestBed.configureTestingModule({
-      imports: [CategoryDialogComponent],
-      providers: [
-        provideNoopAnimations(),
-        { provide: CategoriesStore, useValue: store },
-        { provide: Router, useValue: router },
-        { provide: MessageService, useValue: jasmine.createSpyObj('MessageService', ['add']) },
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '7' } } } },
-      ],
-    });
-    const fixture = TestBed.createComponent(CategoryDialogComponent);
-    fixture.detectChanges();
-
+    const fixture = setup('7', { id: 7, name: 'Sensors', canEdit: true, canDelete: true });
     const component = fixture.componentInstance;
     expect(component.isEdit()).toBeTrue();
     expect(component.title()).toBe('Edit');
@@ -82,29 +71,7 @@ describe('CategoryDialogComponent', () => {
   });
 
   it('disables the form when the record is read-only', () => {
-    store = jasmine.createSpyObj<CategoriesStore>('CategoriesStore', [
-      'getById',
-      'nameExists',
-      'add',
-      'update',
-    ]);
-    store.nameExists.and.returnValue(of(false));
-    store.getById.and.returnValue(of({ id: 3, name: 'Locked', canEdit: false, canDelete: false }));
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
-
-    TestBed.configureTestingModule({
-      imports: [CategoryDialogComponent],
-      providers: [
-        provideNoopAnimations(),
-        { provide: CategoriesStore, useValue: store },
-        { provide: Router, useValue: router },
-        { provide: MessageService, useValue: jasmine.createSpyObj('MessageService', ['add']) },
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '3' } } } },
-      ],
-    });
-    const fixture = TestBed.createComponent(CategoryDialogComponent);
-    fixture.detectChanges();
-
+    const fixture = setup('3', { id: 3, name: 'Locked', canEdit: false, canDelete: false });
     const component = fixture.componentInstance;
     expect(component.canEdit()).toBeFalse();
     expect(component.form.disabled).toBeTrue();
